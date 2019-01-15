@@ -31,6 +31,27 @@ dependencies {
 }
 */
 
-task hello {
-	println 'Gradle Hello'
+
+task myBasicTask(description:'디폴트 Task입니다.', dependsOn:'other') << {
+	logging.level = LogLevel.DEBUG
+	println "default task"
+}
+
+task other <<{
+	println "other run"
+}
+
+task cellphone {
+	description = 'Display calling message'
+	doLast {
+		println '통화하기'
+	}
+
+	doFirst {
+		println '전화걸기'
+	}
+
+	doLast {
+		println '전화끊기'
+	}
 }
