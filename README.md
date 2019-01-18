@@ -231,3 +231,67 @@ task other <<{
     * 만들어진 jar 파일을 실행하면 'Manifest 속성이 없다'는 오류가 발생함
     * war 파일을 만들 때 WEB-INF 디렉터리와 메타 정보를 추가하는 것처럼
     * jar 파일을 만들 때도 파일 규격에 맞춰 Manifest 정보를 작성하고 main 클래스를 명시해야함
+  * gradle은 데스크탑에서 실행될 프로그램을 만드는 경우에 Application 플러그인을 이용하여 메타 정보를 작성하지 않고 단순하게 실행할 수 있다.
+    ```groovy
+    apply plugin: 'application' //plugin 추가
+    mainClassName = "ITextHello"    //mainClass 지정
+    ```
+    * gradle run 하면 pdf 파일 만들어짐
+    
+* run Task 는 args 키워드를 사용하여 파라미터를 전달함
+  ```groovy
+  run {
+      if (project.hasProperty("args")) {
+          args project.args.split('\\s')
+      }
+  }
+  ```
+  * run Task로 파리미터를 전달
+  ```text
+  gradle run –Pargs="mypdf"
+  ```
+  
+ * runnable jar 만들기
+ * jar를 만들 때 MATA-INF 하위에 확장자가 SF, DSA, RSA와 같은 파일들은 배제합니다.
+  * 이 파일들이 포함되어 있으면 SecurityException 오류가 발생 할 수 있다.
+  * manifest에는 main 메서드를 가진 실행될 클래스의 전체 경로를 입력
+  ```groovy
+  jar {
+      from files(sourceSets.main.output.classesDir)
+      from { configurations.compile.collect { zipTree(it) } } {
+          exclude "META-INF/*.SF"
+          exclude "META-INF/*.DSA"
+          exclude "META-INF/*.RSA"
+      }
+  
+      manifest {
+          attributes "Main-Class": "ParamPDF"
+      }
+  }
+  ```
+  
+* zip 파일 스크립트 생성 : gradle diskZip
+
+* 소스 디렉터리를 zip 파일로 묶음
+  ```groovy
+  task srcZip(type:Zip) {
+      classifier = 'src'
+      from sourceSets*.allSource
+      destinationDir = file("$buildDir/myzips")
+  
+      archiveName = "$project.name-source.zip"
+  }
+  ```
+
+* 소스 디렉터리를 tar 파일로 묶음
+  ```groovy
+  task srcTar(type:Tar) {
+      classifier = 'src'
+      from sourceSets*.allSource
+      destinationDir = file("$buildDir/myzips")
+  
+      archiveName = "$project.name-sources.tar.gz"
+  
+      compression = Compression.GZIP
+  }
+  ```  

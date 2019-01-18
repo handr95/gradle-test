@@ -1,9 +1,19 @@
 apply plugin: 'java'
+apply plugin: 'application'
+
 compileJava.options.encoding = 'UTF-8'
 
-/*task initJavaFolder << {
-    sourceSets*.java.srcDirs*.each {it.mkdirs()}
-    sourceSets*.resources.srcDirs*.each {it.mkdirs()}
+run {
+    if (project.hasProperty("args")) {
+        args project.args.split('\\s')
+    }
+}
+
+mainClassName = "ParamPDF"
+
+task initJavaFolder << {
+    sourceSets*.java.srcDirs*.each { it.mkdirs() }
+    sourceSets*.resources.srcDirs*.each { it.mkdirs() }
 }
 
 task printJavafolder << {
@@ -13,7 +23,38 @@ task printJavafolder << {
             println "resources.srcDirs = ${resources.srcDirs}"
         }
     }
-}*/
+}
+
+jar {
+    from files(sourceSets.main.output.classesDir)
+    from { configurations.compile.collect { zipTree(it) } } {
+        exclude "META-INF/*.SF"
+        exclude "META-INF/*.DSA"
+        exclude "META-INF/*.RSA"
+    }
+
+    manifest {
+        attributes "Main-Class": "ParamPDF"
+    }
+}
+
+task srcZip(type:Zip) {
+    classifier = 'src'
+    from sourceSets*.allSource
+    destinationDir = file("$buildDir/myzips")
+
+    archiveName = "$project.name-source.zip"
+}
+
+task srcTar(type:Tar) {
+    classifier = 'src'
+    from sourceSets*.allSource
+    destinationDir = file("$buildDir/myzips")
+
+    archiveName = "$project.name-sources.tar.gz"
+
+    compression = Compression.GZIP
+}
 
 repositories {
     mavenCentral()
@@ -25,38 +66,3 @@ dependencies {
     compile 'org.slf4j:slf4j-api:1.7.5'
     testCompile 'junit:junit:4.11'
 }
-/*
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-task makeResourceFolder << {
-    sourceSets*.resources.srcDirs*.each {it.mkdirs()}
-}
-
-repositories {
-	jcenter()
-}
-buildDir = 'build'
-
-
-
-
-
-sourceSets {
-	main {
-		java {
-			srcDirs = ['src', 'mysrc']
-		}
-	}
-
-	test {
-		java {
-			srcDirs = ['test', 'mytest']
-		}
-	}
-}
-
-dependencies {
-	compile 'org.slf4j:slf4j-api:1.7.5'
-	testCompile 'junit:junit:4.11'
-}*/
