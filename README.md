@@ -1,11 +1,5 @@
 # Gradle study
 
-{{toc}}
-{toc}
-{:toc}
-[toc]
-[:oc]
-
 ## gradle 기본 명령어
 
 * gradle init --type basic
