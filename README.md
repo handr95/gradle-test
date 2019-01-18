@@ -79,13 +79,13 @@
 
 * 로깅 설정
   * Logging.level = LogLevel.레벨
-
-레벨 | 용도 
----- | ---- 
-LIFECYCCLE | 에러 메시지 출력 (기본값)
-QUIET | 간결한 출력 (시스템 로그는 표시하지 않음)
-INFO | QUIET보다 상세
-DEBUG | 모든 메시지 출력
+  
+  레벨 | 용도 
+  ---- | ---- 
+  LIFECYCCLE | 에러 메시지 출력 (기본값)
+  QUIET | 간결한 출력 (시스템 로그는 표시하지 않음)
+  INFO | QUIET보다 상세
+  DEBUG | 모든 메시지 출력
 
 ```groovy
 task myBasicTask(description:'디폴트 Task입니다.', dependsOn:'other') << {
@@ -193,3 +193,41 @@ task other <<{
 * build 디렉터리는 반복해서 파일이 생성되는 디렉터리이므로 이전에 생성된 파일과 중복될수 있음
   * clean task 사용시 build 디렉터리 삭제됨
   
+# 의존성 관리
+
+* 컴파일, 테스트, 실행
+
+* gradle에서는 사용하는 라이브러리가 중복되지 않도록 스코프 지원
+  * gradle dependencies : 자바 프로젝트에서 지원하는 스코프 확인
+  
+  스코프 설정 | 관련 Task | 설명 
+  ---- | ---- | ----
+  compile | compileJava | 컴파일 시 포함해야 할 때
+  runtime | - | 실행시점에 포함해야 할 때
+  testCompile | compileTestJava | 테스트를 위해 컴파일할 때 포함해야 할 때
+  testRuntime | test | 테스트를 실행시킬 때
+  
+* 라이브러리 추가
+  * http://mvnrepository.com 접속하여 사용할 라이브러리 검색
+  * repositories 설정
+  ```groovy
+  repositories {
+          mavenCentral()
+  }
+  ```
+  * dependencies에 라이브러리 추가
+  ```groovy
+  dependencies {
+    compile 'com.itextpdf:itexpdf:5.5.5'
+    
+    compile 'org.slf4j:slf4j-api:1.7.5'
+    testCompile 'junit:junit:4.11'
+  }
+  ```
+  
+  # 패키징
+  
+  * gradle jar 파일은 libs 디렉터리에 생성
+    * 만들어진 jar 파일을 실행하면 'Manifest 속성이 없다'는 오류가 발생함
+    * war 파일을 만들 때 WEB-INF 디렉터리와 메타 정보를 추가하는 것처럼
+    * jar 파일을 만들 때도 파일 규격에 맞춰 Manifest 정보를 작성하고 main 클래스를 명시해야함
