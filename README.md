@@ -1,5 +1,7 @@
 # Gradle study
 
+{:toc}
+
 ## gradle 기본 명령어
 
 * gradle init --type basic
@@ -111,7 +113,7 @@ task other <<{
   }
   ```
 
-# 프로젝트 초기화
+## 프로젝트 초기화
 
 * java 플러그인 추가
   * build task 실행시 의존관계가 있는 compileJava와 test Task가 실행.
@@ -193,7 +195,7 @@ task other <<{
 * build 디렉터리는 반복해서 파일이 생성되는 디렉터리이므로 이전에 생성된 파일과 중복될수 있음
   * clean task 사용시 build 디렉터리 삭제됨
   
-# 의존성 관리
+## 의존성 관리
 
 * 컴파일, 테스트, 실행
 
@@ -225,18 +227,18 @@ task other <<{
   }
   ```
   
-  # 패키징
+## 패키징
   
-  * gradle jar 파일은 libs 디렉터리에 생성
-    * 만들어진 jar 파일을 실행하면 'Manifest 속성이 없다'는 오류가 발생함
-    * war 파일을 만들 때 WEB-INF 디렉터리와 메타 정보를 추가하는 것처럼
-    * jar 파일을 만들 때도 파일 규격에 맞춰 Manifest 정보를 작성하고 main 클래스를 명시해야함
-  * gradle은 데스크탑에서 실행될 프로그램을 만드는 경우에 Application 플러그인을 이용하여 메타 정보를 작성하지 않고 단순하게 실행할 수 있다.
-    ```groovy
-    apply plugin: 'application' //plugin 추가
-    mainClassName = "ITextHello"    //mainClass 지정
-    ```
-    * gradle run 하면 pdf 파일 만들어짐
+* gradle jar 파일은 libs 디렉터리에 생성
+  * 만들어진 jar 파일을 실행하면 'Manifest 속성이 없다'는 오류가 발생함
+  * war 파일을 만들 때 WEB-INF 디렉터리와 메타 정보를 추가하는 것처럼
+  * jar 파일을 만들 때도 파일 규격에 맞춰 Manifest 정보를 작성하고 main 클래스를 명시해야함
+* gradle은 데스크탑에서 실행될 프로그램을 만드는 경우에 Application 플러그인을 이용하여 메타 정보를 작성하지 않고 단순하게 실행할 수 있다.
+  ```groovy
+  apply plugin: 'application' //plugin 추가
+  mainClassName = "ITextHello"    //mainClass 지정
+  ```
+  * gradle run 하면 pdf 파일 만들어짐
     
 * run Task 는 args 키워드를 사용하여 파라미터를 전달함
   ```groovy
